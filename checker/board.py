@@ -1,4 +1,3 @@
-
 import pygame
 from .constants import WHITE, ROWS, PINK, SQUARE_SIZE, COLS, YELLOW, PURPLE
 from .piece import Piece
@@ -9,6 +8,18 @@ class Board:
         self.red_left = self.white_left = 12
         self.red_kings = self.white_kings = 0
         self.create_board()
+
+    def evaluate(self):
+        return self.white_left-self.red_left+(self.white_kings*0.5-self.red_kings*0.5)
+
+    def get_all_pieces(self, color):
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece != 0 and piece.color == color:
+                    pieces.append(piece)
+        return pieces  # Return the list of pieces, not a single piece
+
     
     def draw_squares(self, win):
         win.fill(PINK)
