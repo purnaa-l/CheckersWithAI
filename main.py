@@ -1,46 +1,69 @@
-import pygame
-from checker.constants import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, YELLOW
-from checker.game import Game
-from minimax.algorithm import minimax
+# Importing necessary modules
+import pygame  # For graphics and game functionality
+from checker.constants import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, YELLOW  # Constants used in the game
+from checker.game import Game  # Game class to manage game logic
+from minimax.algorithm import minimax  # Minimax algorithm for AI decisions
 
+# Frame rate per second for smooth gameplay
 FPS = 60
 
+# Creating the game window with predefined dimensions
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Checkers')
+pygame.display.set_caption('Checkers With AI')  # Setting the title of the game window
 
+# Function to convert mouse position into board row and column
 def get_row_col_from_mouse(pos):
+    """
+    Converts the pixel position of the mouse click into board coordinates.
+
+    Args:
+        pos (tuple): Mouse position (x, y) in pixels.
+
+    Returns:
+        tuple: (row, col) indices of the board based on the mouse position.
+    """
     x, y = pos
-    row = y // SQUARE_SIZE
-    col = x // SQUARE_SIZE
+    row = y // SQUARE_SIZE  # Calculate row by dividing y-coordinate by square size
+    col = x // SQUARE_SIZE  # Calculate column by dividing x-coordinate by square size
     return row, col
 
+# Main function to run the game loop
 def main():
-    run = True
-    clock = pygame.time.Clock()
-    game = Game(WIN)
+    """
+    Main function to initialize the game loop, handle events, and manage AI moves.
+    """
+    run = True  # Boolean to control the main game loop
+    clock = pygame.time.Clock()  # Clock to control frame rate
+    game = Game(WIN)  # Create an instance of the Game class
 
+    # Main game loop
     while run:
-        clock.tick(FPS)
+        clock.tick(FPS)  # Limit the loop to the defined frames per second
         
+        # AI Move: If it's the AI's turn (Yellow), compute the best move
         if game.turn == YELLOW:
-            value, new_board = minimax(game.get_board(), 4, YELLOW, game)
-            game.ai_move(new_board)
+            value, new_board = minimax(game.get_board(), 4, YELLOW, game)  # Depth set to 4
+            game.ai_move(new_board)  # Apply the best move determined by the minimax algorithm
 
+        # Check for a winner
         if game.winner() != None:
-            print(game.winner())
-            run = False
+            print(game.winner())  # Output the winner to the console
+            run = False  # Exit the loop
 
+        # Event handling
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
+            if event.type == pygame.QUIT:  # If the close button is clicked
+                run = False  # Exit the loop
             
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                row, col = get_row_col_from_mouse(pos)
-                game.select(row, col)
+            if event.type == pygame.MOUSEBUTTONDOWN:  # If the mouse is clicked
+                pos = pygame.mouse.get_pos()  # Get the position of the click
+                row, col = get_row_col_from_mouse(pos)  # Convert to board coordinates
+                game.select(row, col)  # Handle the selection
 
-        game.update()
+        game.update()  # Update the game state and redraw the screen
     
-    pygame.quit()
+    pygame.quit()  # Quit the game after the loop ends
 
-main()
+# Run the main function to start the game
+if __name__ == "__main__":
+    main()
