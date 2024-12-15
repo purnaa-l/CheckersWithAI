@@ -9,7 +9,7 @@ class Piece:
     as well as drawing and movement on the board.
     """
     PADDING = 15  # Padding around the piece for visual separation
-    OUTLINE = 2  # Outline thickness for the piece's border
+    OUTLINE = 5  # Outline thickness for the piece's border
 
     def __init__(self, row, col, color):
         """

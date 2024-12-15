@@ -1,6 +1,5 @@
-# Importing necessary modules
 import pygame  # For graphics and game functionality
-from checker.constants import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, YELLOW  # Constants used in the game
+from checker.constants import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, YELLOW, BLACK, FONT_SIZE  # Constants used in the game
 from checker.game import Game  # Game class to manage game logic
 from minimax.algorithm import minimax  # Minimax algorithm for AI decisions
 
@@ -27,6 +26,24 @@ def get_row_col_from_mouse(pos):
     col = x // SQUARE_SIZE  # Calculate column by dividing x-coordinate by square size
     return row, col
 
+# Function to display the winner and total time taken
+def display_winner(winner, time_taken):
+    """
+    Displays the winner and the total time taken at the end of the game.
+    
+    Args:
+        winner (str): The winner of the game ("AI" or "Human").
+        time_taken (int): The total time the game took in seconds.
+    """
+    font = pygame.font.SysFont('Arial', FONT_SIZE)  # Using Arial font for text
+    winner_text = font.render(f"Winner: {winner}", True, BLACK)
+    time_text = font.render(f"Time Taken: {time_taken}s", True, BLACK)
+    
+    # Display the winner and time on the screen
+    WIN.blit(winner_text, (WIDTH // 2 - winner_text.get_width() // 2, HEIGHT // 2 - 40))
+    WIN.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, HEIGHT // 2 + 10))
+    pygame.display.update()
+
 # Main function to run the game loop
 def main():
     """
@@ -35,7 +52,10 @@ def main():
     run = True  # Boolean to control the main game loop
     clock = pygame.time.Clock()  # Clock to control frame rate
     game = Game(WIN)  # Create an instance of the Game class
-
+    
+    # Track the start time of the game
+    start_time = pygame.time.get_ticks()
+    
     # Main game loop
     while run:
         clock.tick(FPS)  # Limit the loop to the defined frames per second
@@ -47,7 +67,10 @@ def main():
 
         # Check for a winner
         if game.winner() != None:
-            print(game.winner())  # Output the winner to the console
+            winner = "AI" if game.winner() == YELLOW else "Human"  # Determine winner
+            time_taken = (pygame.time.get_ticks() - start_time) // 1000  # Calculate time in seconds
+            display_winner(winner, time_taken)  # Display winner and time
+            pygame.time.delay(100000)  # Wait for 2 seconds before quitting
             run = False  # Exit the loop
 
         # Event handling
