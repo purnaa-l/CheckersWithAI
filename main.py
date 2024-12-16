@@ -55,11 +55,30 @@ def display_winner(winner, time_taken):
     WIN.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, HEIGHT // 2 + 10))
     pygame.display.update()
 
+def winner(self):
+    """
+    Checks if there is a winner based on the current state of the game.
+
+    Returns:
+        str: "Human", "AI" or None if no winner yet.
+    """
+    # Check if the human has pieces or can move
+    if not self.purple_pieces or not self.can_move(self.purple_pieces):
+        return "AI"  # AI wins if the human has no pieces or cannot move
+
+    # Check if the AI has pieces or can move
+    if not self.yellow_pieces or not self.can_move(self.yellow_pieces):
+        return "Human"  # Human wins if the AI has no pieces or cannot move
+    
+    return None  # No winner yet
+
 # Main function to run the game loop
 def main():
     """
     Main function to initialize the game loop, handle events, and manage AI moves.
     """
+    pygame.font.init()  # Initialize the font system in pygame
+
     # Welcome message and instructions
     speak("Welcome to Checkers with AI. Do you want to listen to the instructions?")
     response = input("Do you want to listen to the instructions? (yes/no): ").strip().lower()
@@ -71,6 +90,9 @@ def main():
             "Click on your pieces and then select the destination to make a move. "
             "AI plays as Yellow and you play as Purple. Good luck!"
         )
+        speak(instructions)
+    else:
+        instructions=("Very Well. Please proceed to the pygame window to play your game. Good Luck!")
         speak(instructions)
 
     # Start the game
@@ -85,30 +107,31 @@ def main():
     while run:
         clock.tick(FPS)  # Limit the loop to the defined frames per second
 
-        # AI Move: If it's the AI's turn (Yellow), compute the best move
+    # AI Move: If it's the AI's turn (Yellow), compute the best move
         if game.turn == YELLOW:
             value, new_board = minimax(game.get_board(), 4, YELLOW, game)  # Depth set to 4
             game.ai_move(new_board)  # Apply the best move determined by the minimax algorithm
 
-        # Check for a winner
-        if game.winner() != None:
-            winner = "AI" if game.winner() == YELLOW else "Human"  # Determine winner
+    # Check for a winner
+        winner = game.winner()  # Get the winner (if any)
+        if winner is not None:
             time_taken = (pygame.time.get_ticks() - start_time) // 1000  # Calculate time in seconds
             display_winner(winner, time_taken)  # Display winner and time
             pygame.time.delay(10000)  # Wait for 10 seconds before quitting
             run = False  # Exit the loop
 
-        # Event handling
+    # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # If the close button is clicked
                 run = False  # Exit the loop
-            
+        
             if event.type == pygame.MOUSEBUTTONDOWN:  # If the mouse is clicked
                 pos = pygame.mouse.get_pos()  # Get the position of the click
                 row, col = get_row_col_from_mouse(pos)  # Convert to board coordinates
                 game.select(row, col)  # Handle the selection
 
         game.update()  # Update the game state and redraw the screen
+  # Update the game state and redraw the screen
 
     pygame.quit()  # Quit the game after the loop ends
 
