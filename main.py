@@ -2,6 +2,17 @@ import pygame  # For graphics and game functionality
 from checker.constants import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, YELLOW, BLACK, FONT_SIZE  # Constants used in the game
 from checker.game import Game  # Game class to manage game logic
 from minimax.algorithm import minimax  # Minimax algorithm for AI decisions
+import gtts
+import playsound as py
+from os import path
+import os
+
+def speak(msg):
+    vd = gtts.gTTS(msg)
+    if path.exists('temp_audio.mp3'):
+        os.remove('temp_audio.mp3')
+    vd.save('temp_audio.mp3')
+    py.playsound('temp_audio.mp3')
 
 # Frame rate per second for smooth gameplay
 FPS = 60
@@ -49,17 +60,31 @@ def main():
     """
     Main function to initialize the game loop, handle events, and manage AI moves.
     """
+    # Welcome message and instructions
+    speak("Welcome to Checkers with AI. Do you want to listen to the instructions?")
+    response = input("Do you want to listen to the instructions? (yes/no): ").strip().lower()
+    
+    if response == 'yes':
+        instructions = (
+            "The game is played between a Human and an AI. "
+            "The goal is to capture all opponent's pieces or block them from making any move. "
+            "Click on your pieces and then select the destination to make a move. "
+            "AI plays as Yellow and you play as Purple. Good luck!"
+        )
+        speak(instructions)
+
+    # Start the game
     run = True  # Boolean to control the main game loop
     clock = pygame.time.Clock()  # Clock to control frame rate
     game = Game(WIN)  # Create an instance of the Game class
-    
+
     # Track the start time of the game
     start_time = pygame.time.get_ticks()
-    
+
     # Main game loop
     while run:
         clock.tick(FPS)  # Limit the loop to the defined frames per second
-        
+
         # AI Move: If it's the AI's turn (Yellow), compute the best move
         if game.turn == YELLOW:
             value, new_board = minimax(game.get_board(), 4, YELLOW, game)  # Depth set to 4
@@ -70,7 +95,7 @@ def main():
             winner = "AI" if game.winner() == YELLOW else "Human"  # Determine winner
             time_taken = (pygame.time.get_ticks() - start_time) // 1000  # Calculate time in seconds
             display_winner(winner, time_taken)  # Display winner and time
-            pygame.time.delay(100000)  # Wait for 2 seconds before quitting
+            pygame.time.delay(10000)  # Wait for 10 seconds before quitting
             run = False  # Exit the loop
 
         # Event handling
@@ -84,7 +109,7 @@ def main():
                 game.select(row, col)  # Handle the selection
 
         game.update()  # Update the game state and redraw the screen
-    
+
     pygame.quit()  # Quit the game after the loop ends
 
 # Run the main function to start the game
