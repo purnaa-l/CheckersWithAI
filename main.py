@@ -88,7 +88,7 @@ def main():
             "The game is played between a Human and an AI. "
             "The goal is to capture all opponent's pieces or block them from making any move. "
             "Click on your pieces and then select the destination to make a move. "
-            "AI plays as Yellow and you play as Purple. Good luck!"
+            "AI plays as Yellow and you play as Purple. Please proceed to the pygame window to play your game! Good luck!"
         )
         speak(instructions)
     else:
