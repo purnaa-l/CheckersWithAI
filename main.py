@@ -6,6 +6,7 @@ import gtts
 import playsound as py
 from os import path
 import os
+import pickle
 
 def speak(msg):
     vd = gtts.gTTS(msg)
@@ -125,6 +126,12 @@ def main():
             if event.type == pygame.QUIT:  # If the close button is clicked
                 run = False  # Exit the loop
         
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:  # Press 'S' to save the game
+                    save_game(game)
+                elif event.key == pygame.K_l:  # Press 'L' to load the game
+                    game = load_game()
+
             if event.type == pygame.MOUSEBUTTONDOWN:  # If the mouse is clicked
                 pos = pygame.mouse.get_pos()  # Get the position of the click
                 row, col = get_row_col_from_mouse(pos)  # Convert to board coordinates
