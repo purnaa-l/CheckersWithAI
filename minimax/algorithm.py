@@ -121,4 +121,4 @@ def draw_moves(game, board, piece):
     game.draw_valid_moves(valid_moves.keys())
     pygame.display.update()  # Update the display to show the changes
     # Uncomment the line below to add a delay for visualizing moves
-    pygame.time.delay(100)
+    pygame.time.delay(10000)

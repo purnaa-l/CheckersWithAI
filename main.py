@@ -9,7 +9,8 @@ import os
 import pickle
 
 def speak(msg):
-    vd = gtts.gTTS(msg)
+    vd = gtts.gTTS(msg, lang='en-au')
+
     if path.exists('temp_audio.mp3'):
         os.remove('temp_audio.mp3')
     vd.save('temp_audio.mp3')
@@ -47,31 +48,47 @@ def display_winner(winner, time_taken):
         winner (str): The winner of the game ("AI" or "Human").
         time_taken (int): The total time the game took in seconds.
     """
-    font = pygame.font.SysFont('Arial', FONT_SIZE)  # Using Arial font for text
+    font = pygame.font.SysFont('Times New Roman', FONT_SIZE)
     winner_text = font.render(f"Winner: {winner}", True, BLACK)
     time_text = font.render(f"Time Taken: {time_taken}s", True, BLACK)
     
-    # Display the winner and time on the screen
     WIN.blit(winner_text, (WIDTH // 2 - winner_text.get_width() // 2, HEIGHT // 2 - 40))
     WIN.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, HEIGHT // 2 + 10))
+    speak(f"The winner is {winner}! Well played!")
     pygame.display.update()
 
+   
 def winner(self):
     """
-    Checks if there is a winner based on the current state of the game.
+    Determines the outcome of the game.
 
     Returns:
-        str: "Human", "AI" or None if no winner yet.
+        str: "Human", "AI", "Draw", or None if no winner yet.
     """
-    # Check if the human has pieces or can move
-    if not self.purple_pieces or not self.can_move(self.purple_pieces):
-        return "AI"  # AI wins if the human has no pieces or cannot move
+    # Check if the human (Purple) has no pieces or cannot move
+    human_pieces = self.get_all_pieces(PURPLE)
+    if not human_pieces or not self.can_move(PURPLE):
+        if not self.can_move(YELLOW):  # If AI also cannot move, it's a draw
+            return "Draw"
+        return "AI"  # AI wins if only Human cannot move
 
-    # Check if the AI has pieces or can move
-    if not self.yellow_pieces or not self.can_move(self.yellow_pieces):
-        return "Human"  # Human wins if the AI has no pieces or cannot move
-    
+    # Check if the AI (Yellow) has no pieces or cannot move
+    ai_pieces = self.get_all_pieces(YELLOW)
+    if not ai_pieces or not self.can_move(YELLOW):
+        if not self.can_move(PURPLE):  # If Human also cannot move, it's a draw
+            return "Draw"
+        return "Human"  # Human wins if only AI cannot move
+
+    # Check for a draw when both sides have only one piece
+    if len(human_pieces) == 1 and len(ai_pieces) == 1 and not self.can_move(PURPLE) and not self.can_move(YELLOW):
+        return "Draw"
+    if len(human_pieces)==1 and not self.can_move(PURPLE):
+        return "Draw"
+
     return None  # No winner yet
+
+
+
 
 # Main function to run the game loop
 def main():
