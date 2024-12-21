@@ -87,9 +87,6 @@ def winner(self):
 
     return None  # No winner yet
 
-
-
-
 # Main function to run the game loop
 def main():
     """
