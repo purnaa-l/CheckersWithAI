@@ -16,14 +16,13 @@ def speak(msg):
     vd.save('temp_audio.mp3')
     py.playsound('temp_audio.mp3')
 
-# Frame rate per second for smooth gameplay
+Frame rate per second for smooth gameplay
 FPS = 60
 
 # Creating the game window with predefined dimensions
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Checkers With AI')  # Setting the title of the game window
 
-# Function to convert mouse position into board row and column
 def get_row_col_from_mouse(pos):
     """
     Converts the pixel position of the mouse click into board coordinates.
@@ -54,7 +53,7 @@ def display_winner(winner, time_taken):
     
     WIN.blit(winner_text, (WIDTH // 2 - winner_text.get_width() // 2, HEIGHT // 2 - 40))
     WIN.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, HEIGHT // 2 + 10))
-    speak(f"The winner is {winner}! Well played!")
+    # speak(f"The winner is {winner}! Well played!")
     pygame.display.update()
 
    
@@ -94,7 +93,6 @@ def main():
     """
     pygame.font.init()  # Initialize the font system in pygame
 
-    # Welcome message and instructions
     speak("Welcome to Checkers with AI. Do you want to listen to the instructions?")
     response = input("Do you want to listen to the instructions? (yes/no): ").strip().lower()
     
@@ -140,11 +138,11 @@ def main():
             if event.type == pygame.QUIT:  # If the close button is clicked
                 run = False  # Exit the loop
         
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:  # Press 'S' to save the game
-                    save_game(game)
-                elif event.key == pygame.K_l:  # Press 'L' to load the game
-                    game = load_game()
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_s:  # Press 'S' to save the game
+            #         save_game(game)
+            #     elif event.key == pygame.K_l:  # Press 'L' to load the game
+            #         game = load_game()
 
             if event.type == pygame.MOUSEBUTTONDOWN:  # If the mouse is clicked
                 pos = pygame.mouse.get_pos()  # Get the position of the click
